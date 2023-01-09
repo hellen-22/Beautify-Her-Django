@@ -1,8 +1,15 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from accounts.models import ServiceProviderProfile
-# Create your models here.
+from accounts.models import ServiceProviderProfile, User
+
+PAYMENT_STATUS_CHOICES = (
+    ('Pending', 'Pending'),
+    ('Complete', 'Complete'),
+    ('Failed', 'Failed')
+)
+
+
 class ServiceCategory(models.Model):
     category_name = models.CharField(max_length=100)
 
@@ -45,3 +52,32 @@ class Product(models.Model):
     
     def __str__(self) -> str:
         return self.name
+
+class Cart(models.Model):
+    added_at = models.DateTimeField(auto_now_add=True)
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self) -> str:
+        return self.product.name
+
+class Order(models.Model):
+    placed_at = models.DateTimeField(auto_now_add=True)
+    payment_status = models.CharField(max_length=100, choices=PAYMENT_STATUS_CHOICES)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.customer.first_name
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.product.name
