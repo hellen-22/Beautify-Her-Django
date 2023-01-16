@@ -81,3 +81,14 @@ class OrderItem(models.Model):
 
     def __str__(self) -> str:
         return self.product.name
+
+
+class BookAppointment(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    provider = models.ForeignKey(ServiceProviderProfile, on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField()
+
+    def __str__(self) -> str:
+        return f"{self.service.name} 'on' {self.customer.first_name} 'by' {self.provider.user.first_name}"
