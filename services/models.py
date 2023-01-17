@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from accounts.models import ServiceProviderProfile, User
+from accounts.models import ServiceProvider, Customer
 
 PAYMENT_STATUS_CHOICES = (
     ('Pending', 'Pending'),
@@ -27,7 +27,7 @@ class Service(models.Model):
 
 class ServiceUpload(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    provider = models.ForeignKey(ServiceProviderProfile, on_delete=models.CASCADE)
+    provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(1)])
     images = models.ImageField(upload_to='images/services')
     rating = models.PositiveIntegerField(validators=[MaxValueValidator(5)])
@@ -68,7 +68,7 @@ class CartItem(models.Model):
 class Order(models.Model):
     placed_at = models.DateTimeField(auto_now_add=True)
     payment_status = models.CharField(max_length=100, choices=PAYMENT_STATUS_CHOICES)
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.customer.first_name
@@ -85,8 +85,8 @@ class OrderItem(models.Model):
 
 class BookAppointment(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    provider = models.ForeignKey(ServiceProviderProfile, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
 

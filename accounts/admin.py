@@ -7,10 +7,10 @@ from .models import *
 class CustomUserAdmin(UserAdmin):
     pass
 
-@admin.register(CustomerProfile)
+@admin.register(Customer)
 class CustomerProfile(admin.ModelAdmin):
     list_display = ['firstname', 'bio']
 
-@admin.register(ServiceProviderProfile)
+@admin.register(ServiceProvider)
 class ProviderProfileAdmin(admin.ModelAdmin):
     list_display = ['username', 'location', 'phone_number']
