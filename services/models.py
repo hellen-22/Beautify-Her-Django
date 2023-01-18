@@ -27,7 +27,7 @@ class Service(models.Model):
 
 class ServiceUpload(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE)
+    provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE, related_name='provider')
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(1)])
     images = models.ImageField(upload_to='images/services')
     rating = models.PositiveIntegerField(validators=[MaxValueValidator(5)])
