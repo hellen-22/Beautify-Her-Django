@@ -1,13 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework_nested import routers
 
 from . import views
 
+router =  routers.DefaultRouter()
+router.register('customer', views.CustomerRegistrationViewSet, basename='customer')
+router.register('service-provider', views.ServiceProviderRegistrationViewSet, basename='service-provider')
+
 
 urlpatterns = [
-    path('customer/', views.CustomerRegistrationGenericApiView.as_view(), name='customer-register'),
-    path('customer/<int:pk>/', views.CustomerProfileRetrieveUpdateDeleteGenericApiView.as_view(), name='customer-details'),
-
-    path('service-provider/', views.ServiceProviderRegistrationGenericApiView.as_view(), name='service-provider-register'),
-    path('service-provider/<int:pk>/', views.ServiceProviderProfileRetrieveUpdateDeleteGenericApiView.as_view(), name='service-provider-details'),
+    path('', include(router.urls)),
 ]

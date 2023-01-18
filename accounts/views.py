@@ -7,33 +7,22 @@ from .serializers import *
 from .models import *
 
 #Registration views.
-class CustomerRegistrationGenericApiView(generics.ListCreateAPIView):
+class CustomerRegistrationViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
-    serializer_class = CustomerRegistrationSerializer
-
-#Retrieve, Update and Delete Profiles views
-class CustomerProfileRetrieveUpdateDeleteGenericApiView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Customer.objects.all()
-    #permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == 'PUT':
             return CustomerUpdateSerializer
         return CustomerRegistrationSerializer
-        
+            
 
 #Registration view
 #Need to remove the Listing of Profiles
-class ServiceProviderRegistrationGenericApiView(generics.ListCreateAPIView):
+class ServiceProviderRegistrationViewSet(viewsets.ModelViewSet):
     queryset = ServiceProvider.objects.all()
-    serializer_class = ServiceProviderRegistrationSerializer
-
-#Retrieve, Update and Delete Profiles views
-class ServiceProviderProfileRetrieveUpdateDeleteGenericApiView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ServiceProvider.objects.all()
-    #permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == 'PUT':
             return ServiceProviderUpdateSerializer
         return ServiceProviderRegistrationSerializer
+
