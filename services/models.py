@@ -11,17 +11,17 @@ PAYMENT_STATUS_CHOICES = (
 
 
 class ServiceCategory(models.Model):
-    category_name = models.CharField(max_length=100)
+    category_name = models.CharField(max_length=100, unique=True)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.category_name
 
 
 class Service(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name
 
 
@@ -33,13 +33,13 @@ class ServiceUpload(models.Model):
     rating = models.PositiveIntegerField(validators=[MaxValueValidator(5)])
     slug = models.SlugField(null=True, blank=True)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f'{self.service.name} , {self.provider.username}' 
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=200)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name
 
 
@@ -50,7 +50,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(1)])
     slug = models.SlugField(null=True, blank=True)
     
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name
 
 class Cart(models.Model):
@@ -62,7 +62,7 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.product.name
 
 class Order(models.Model):
@@ -70,7 +70,7 @@ class Order(models.Model):
     payment_status = models.CharField(max_length=100, choices=PAYMENT_STATUS_CHOICES)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.customer.first_name
 
 class OrderItem(models.Model):
@@ -79,7 +79,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField()
     added_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.product.name
 
 
@@ -90,5 +90,5 @@ class BookAppointment(models.Model):
     date = models.DateField()
     time = models.TimeField()
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f"{self.service.name} 'on' {self.customer.first_name} 'by' {self.provider.user.first_name}"
