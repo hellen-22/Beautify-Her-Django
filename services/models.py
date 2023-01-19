@@ -58,8 +58,8 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
     quantity = models.PositiveIntegerField()
 
     def __str__(self):

@@ -2,3 +2,6 @@ Django
 Pillow
 djangorestframework
 drf-nested-routers
+pytest-django
+django-debug-toolbar
+model-bakery
