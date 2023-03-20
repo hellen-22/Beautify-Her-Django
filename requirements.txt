@@ -5,3 +5,5 @@ drf-nested-routers
 pytest-django
 django-debug-toolbar
 model-bakery
+drf-yasg
+djangorestframework-simplejwt
