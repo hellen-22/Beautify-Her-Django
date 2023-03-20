@@ -84,9 +84,9 @@ class OrderItem(models.Model):
 
 
 class BookAppointment(models.Model):
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='service')
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer')
+    provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE, related_name='service_provider')
     date = models.DateField()
     time = models.TimeField()
 

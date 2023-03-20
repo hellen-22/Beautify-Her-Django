@@ -22,6 +22,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
 class ProductCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
+    
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -36,6 +37,7 @@ class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
+
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()
 
@@ -47,3 +49,28 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
     def get_serializer_context(self):
         return {'cart_id': self.kwargs['cart_pk']}
+    
+
+"""The view for service uploading"""
+class ServiceUploadViewSet(viewsets.ModelViewSet):
+    serializer_class = ServiceUploadSerializer
+    #permission_classes = [IsAuthenticated]
+
+    def get_serializer_context(self):
+        return {'provider_id': self.kwargs['provider_pk']}
+
+    def get_queryset(self):
+        return ServiceUpload.objects.filter(provider_id=self.kwargs['provider_pk'])
+
+
+"""The view to enable customer booking appointment"""
+class AppointmentBookingViewSet(viewsets.ModelViewSet):
+    serializer_class = AppointmentBookingSerializer
+    #permission_classes = [IsAuthenticated]
+
+    def get_serializer_context(self):
+        return {'customer_id': self.kwargs['customer_pk']}
+
+    def get_queryset(self):
+        return BookAppointment.objects.filter(customer_id=self.kwargs['customer_pk']).select_related('customer')
+

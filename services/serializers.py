@@ -79,3 +79,34 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['id', 'added_at', 'cart_items']
+
+
+"""A serializer to enable uploading of services by service providers"""
+class ServiceUploadSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        provider_id = self.context['provider_id']
+        provider = ServiceProvider.objects.get(id=provider_id)
+
+        service_upload = ServiceUpload.objects.create(provider=provider, **validated_data)
+        return service_upload
+
+    class Meta:
+        model = ServiceUpload
+        fields = ['id', 'service', 'price', 'images', 'rating']
+
+
+"""A Serializer to enable booking of appointment by customers"""
+class AppointmentBookingSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        customer_id = self.context['customer_id']
+        customer = Customer.objects.get(id=customer_id)
+
+        book_appointment = BookAppointment.objects.create(customer=customer, **validated_data)
+        return book_appointment
+
+        
+    class Meta:
+        model = BookAppointment
+        fields = ['id', 'service', 'provider', 'date', 'time']
+
+ 

@@ -7,9 +7,16 @@ from .serializers import *
 from .models import *
 from services.models import *
 
-#Registration views.
+"""Creation of customers accounts"""
 class CustomerRegistrationViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
+    serializer_class = CustomerRegistrationSerializer
+    http_method_names = ['post']
+
+"""Customer details, updating and deleting"""    
+class CustomerViewSet(viewsets.ModelViewSet):
+    queryset = Customer.objects.all().select_related('user')
+    http_method_names = ['get', 'put', 'patch', 'delete']
 
     def get_serializer_class(self):
         if self.request.method == 'PUT':
@@ -17,10 +24,16 @@ class CustomerRegistrationViewSet(viewsets.ModelViewSet):
         return CustomerRegistrationSerializer
             
 
-#Registration view
-#Need to remove the Listing of Profiles
+"""Creation of service provider account"""
 class ServiceProviderRegistrationViewSet(viewsets.ModelViewSet):
     queryset = ServiceProvider.objects.all()
+    serializer_class = ServiceProviderRegistrationSerializer
+    http_method_names = ['post']
+
+
+"""Service Provider details, updating and deleting""" 
+class ServiceProviderViewSet(viewsets.ModelViewSet):
+    queryset = ServiceProvider.objects.all().select_related('user')
 
     def get_serializer_class(self):
         if self.request.method == 'PUT':
@@ -28,23 +41,8 @@ class ServiceProviderRegistrationViewSet(viewsets.ModelViewSet):
         return ServiceProviderRegistrationSerializer
 
 
-class ServiceUploadViewSet(viewsets.ModelViewSet):
-    serializer_class = ServiceUploadSerializer
-    #permission_classes = [IsAuthenticated]
-
-    def get_serializer_context(self):
-        return {'provider_id': self.kwargs['provider_pk']}
-
-    def get_queryset(self):
-        return ServiceUpload.objects.filter(provider_id=self.kwargs['provider_pk'])
-
-
-class AppointmentBookingViewSet(viewsets.ModelViewSet):
-    serializer_class = AppointmentBookingSerializer
-    #permission_classes = [IsAuthenticated]
-
-    def get_serializer_context(self):
-        return {'customer_id': self.kwargs['customer_pk']}
-
-    def get_queryset(self):
-        return BookAppointment.objects.filter(customer_id=self.kwargs['customer_pk'])
+"""A list of all users"""
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserDetailsSerializer
+    http_method_names = ['get']

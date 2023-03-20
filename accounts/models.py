@@ -14,7 +14,7 @@ class User(AbstractUser):
         return self.username
 
 class Customer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
 
     def __str__(self):
         return self.user.first_name
@@ -28,7 +28,7 @@ class Customer(models.Model):
         return self.user.bio
 
 class ServiceProvider(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_provider')
     location = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=100)
 

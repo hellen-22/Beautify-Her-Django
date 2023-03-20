@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models import *
 from services.models import *
 
+"""A serializer to provide user details to be used on account creation serializer"""
 class UserDetailsSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, max_length=50, style={'input_type': 'password'})
     confirm_password = serializers.CharField(write_only=True, max_length=50, style={'input_type': 'password'})
@@ -13,6 +14,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'password', 'confirm_password']
 
 
+"""A serializer to enable customer registration of their account"""
 class CustomerRegistrationSerializer(serializers.ModelSerializer):
     user = UserDetailsSerializer()
 
@@ -36,11 +38,14 @@ class CustomerRegistrationSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ['id', 'user']
 
+"""Serializer to provide details for user update"""
 class UserUpdateDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'bio']
 
+
+"""A serializer to enable customer updation of account of their account"""
 class CustomerUpdateSerializer(serializers.ModelSerializer):
     user = UserUpdateDetailsSerializer()
 
@@ -62,7 +67,7 @@ class CustomerUpdateSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ['user']
 
-
+"""A serializer to enable service provider registration of their account"""
 class ServiceProviderRegistrationSerializer(serializers.ModelSerializer):
     user = UserDetailsSerializer()
 
@@ -87,6 +92,7 @@ class ServiceProviderRegistrationSerializer(serializers.ModelSerializer):
         model = ServiceProvider
         fields = ['id', 'user', 'location', 'phone_number']
 
+"""A serializer to enable customer updation of their account"""
 class ServiceProviderUpdateSerializer(serializers.ModelSerializer):
     user = UserUpdateDetailsSerializer()
 
@@ -115,27 +121,4 @@ class ServiceProviderUpdateSerializer(serializers.ModelSerializer):
         fields = ['user', 'location', 'phone_number']
 
 
-class ServiceUploadSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        provider_id = self.context['provider_id']
-        provider = ServiceProvider.objects.get(id=provider_id)
-
-        service_upload = ServiceUpload.objects.create(provider=provider, **validated_data)
-        return service_upload
-
-    class Meta:
-        model = ServiceUpload
-        fields = ['id', 'service', 'price', 'images', 'rating']
-
-class AppointmentBookingSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        customer_id = self.context['customer_id']
-        customer = Customer.objects.get(id=customer_id)
-
-        book_appointment = BookAppointment.objects.create(customer=customer, **validated_data)
-        return book_appointment
-
-        
-    class Meta:
-        model = BookAppointment
-        fields = ['id', 'service', 'provider', 'date', 'time']
+       
