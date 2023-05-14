@@ -14,6 +14,14 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'password', 'confirm_password']
 
 
+"""Serializer to provide details for user update"""
+class UserUpdateDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'bio']
+
+
+
 """A serializer to enable customer registration of their account"""
 class CustomerRegistrationSerializer(serializers.ModelSerializer):
     user = UserDetailsSerializer()
@@ -38,11 +46,6 @@ class CustomerRegistrationSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ['id', 'user']
 
-"""Serializer to provide details for user update"""
-class UserUpdateDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'bio']
 
 
 """A serializer to enable customer updation of account of their account"""

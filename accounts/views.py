@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from rest_framework import viewsets, mixins, generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, mixins, generics, response, status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 from .serializers import *
 from .models import *
+from .permissions import *
 from services.models import *
 
 """Creation of customers accounts"""
@@ -15,13 +16,19 @@ class CustomerRegistrationViewSet(viewsets.ModelViewSet):
 
 """Customer details, updating and deleting"""    
 class CustomerViewSet(viewsets.ModelViewSet):
-    queryset = Customer.objects.all().select_related('user')
     http_method_names = ['get', 'put', 'patch', 'delete']
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == 'PUT':
             return CustomerUpdateSerializer
         return CustomerRegistrationSerializer
+    
+    def get_queryset(self):
+        if (self.request.user.is_staff):
+            return Customer.objects.all().select_related('user')
+        return Customer.objects.filter(user=self.request.user).select_related('user')
+    
             
 
 """Creation of service provider account"""
@@ -34,6 +41,8 @@ class ServiceProviderRegistrationViewSet(viewsets.ModelViewSet):
 """Service Provider details, updating and deleting""" 
 class ServiceProviderViewSet(viewsets.ModelViewSet):
     queryset = ServiceProvider.objects.all().select_related('user')
+    http_method_names = ['get', 'put', 'patch', 'delete']
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == 'PUT':
@@ -45,4 +54,4 @@ class ServiceProviderViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserDetailsSerializer
-    http_method_names = ['get']
+    permission_classes = [IsAdminUser]
