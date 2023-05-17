@@ -66,7 +66,7 @@ class ServiceUploadViewSet(viewsets.ModelViewSet):
 """The view to enable customer booking appointment"""
 class AppointmentBookingViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentBookingSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_context(self):
         return {'customer_id': self.kwargs['customer_pk']}
