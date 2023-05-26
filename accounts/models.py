@@ -4,8 +4,14 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class User(AbstractUser):
+    ROLE_CHOICES = (
+        ('is_customer', 'is_customer'),
+        ('is_provider', 'is_provider'),
+    )
+
     email = models.EmailField(unique=True)
     bio = models.TextField()
+    role = models.CharField(max_length=200, choices=ROLE_CHOICES)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username', 'bio']

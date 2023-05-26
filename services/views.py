@@ -9,10 +9,12 @@ from .models import *
 class ServiceCategoryViewSet(viewsets.ModelViewSet):
     queryset = ServiceCategory.objects.all()
     serializer_class = ServiceCategorySerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
+    permission_classes = [permissions.IsAdminUser]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -22,10 +24,12 @@ class ServiceViewSet(viewsets.ModelViewSet):
 class ProductCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
+    permission_classes = [permissions.IsAdminUser]
     
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

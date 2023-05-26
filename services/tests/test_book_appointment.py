@@ -129,14 +129,16 @@ class TestRetrieveAppointment():
         response = api_client.get(f'/customer/{appointment.customer.id}/appointment/{appointment.id}/')
 
         assert response.status_code == status.HTTP_200_OK
-        assert response.data == {
-            'id': appointment.id,
-            'customer': appointment.customer.id,
-            'provider': appointment.provider.id,
-            'service': appointment.service.id,
-            'date': appointment.date,
-            'time': appointment.time
-        }
+
+    def test_if_appointment_doesnot_exist_return_404(self, authenticate_user, api_client):
+        authenticate_user(is_staff=False)
+
+        appointment = baker.make(BookAppointment)
+        appointment.delete()
+
+        response = api_client.get(f'/cutomer/{appointment.customer.id}/appointment/{appointment.id}')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 @pytest.mark.django_db

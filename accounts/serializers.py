@@ -6,12 +6,13 @@ from services.models import *
 
 """A serializer to provide user details to be used on account creation serializer"""
 class UserDetailsSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(read_only=True)
     password = serializers.CharField(write_only=True, max_length=50, style={'input_type': 'password'})
     confirm_password = serializers.CharField(write_only=True, max_length=50, style={'input_type': 'password'})
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'password', 'confirm_password']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'role', 'password', 'confirm_password']
 
 
 """Serializer to provide details for user update"""
@@ -33,7 +34,7 @@ class CustomerRegistrationSerializer(serializers.ModelSerializer):
             confirm_password = user['confirm_password']
 
             if password == confirm_password:
-                user = User.objects.create_user(username=user['username'], first_name=user['first_name'], last_name=user['last_name'], email=user['email'], bio=user['bio'], password=password)
+                user = User.objects.create_user(username=user['username'], first_name=user['first_name'], last_name=user['last_name'], email=user['email'], bio=user['bio'], role='is_customer', password=password)
 
                 customer = Customer.objects.create(user=user)
 
@@ -81,7 +82,7 @@ class ServiceProviderRegistrationSerializer(serializers.ModelSerializer):
             confirm_password = user['confirm_password']
 
             if password == confirm_password:
-                user = User.objects.create_user(username=user['username'], first_name=user['first_name'], last_name=user['last_name'], email=user['email'], bio=user['bio'], password=password)
+                user = User.objects.create_user(username=user['username'], first_name=user['first_name'], last_name=user['last_name'], email=user['email'], bio=user['bio'], role='is_provider', password=password)
 
                 service_provider = ServiceProvider.objects.create(user=user, location=self.validated_data['location'], phone_number=self.validated_data['phone_number'])
 

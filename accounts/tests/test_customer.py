@@ -70,7 +70,7 @@ class TestGetCustomers():
         assert response.status_code == status.HTTP_200_OK
 
     def test_if_authenticated_return_200(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
+        authenticate_user()
 
         response = api_client.get('/customer/')
 
