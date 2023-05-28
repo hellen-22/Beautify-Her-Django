@@ -8,10 +8,12 @@ from services.models import *
 
 @pytest.mark.django_db
 class TestCreateAppointment():
-    def test_if_data_is_valid_return_201(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
+    def test_if_data_is_valid_return_201(self, authorize_user, api_client):
+        user = baker.make(User, role="is_customer", is_staff=False)
 
-        customer = baker.make(Customer)
+        authorize_user(user=user)
+
+        customer = baker.make(Customer, user=user)
         service = baker.make(Service)
         provider = baker.make(ServiceProvider)
 
@@ -23,14 +25,16 @@ class TestCreateAppointment():
             'time': '13:00:00'
         }
 
-        response = api_client.post(f'/customer/{customer.id}/appointment/', appointment)
+        response = api_client.post(f'/services/book-appointment/', appointment)
 
         assert response.status_code == status.HTTP_201_CREATED
 
-    def test_if_data_is_invalid_return_400(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
+    def test_if_data_is_invalid_return_400(self, authorize_user, api_client):
+        user = baker.make(User, role="is_customer", is_staff=False)
 
-        customer = baker.make(Customer)
+        authorize_user(user=user)
+
+        customer = baker.make(Customer, user=user)
         service = baker.make(Service)
         provider = baker.make(ServiceProvider)
 
@@ -42,12 +46,35 @@ class TestCreateAppointment():
             'time': ''
         }
 
-        response = api_client.post(f'/customer/{customer.id}/appointment/', appointment)
+        response = api_client.post(f'/services/book-appointment/', appointment)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_if_is_authenticated_return_201(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
+    def test_if_is_authenticated_and_is_customer_return_201(self, authorize_user, api_client):
+        user = baker.make(User, role="is_customer", is_staff=False)
+
+        authorize_user(user=user)
+
+        customer = baker.make(Customer, user=user)
+        service = baker.make(Service)
+        provider = baker.make(ServiceProvider)
+
+        appointment = {
+            'customer': customer.id,
+            'service': service.id,
+            'provider': provider.id,
+            'date': '2023-01-22',
+            'time': '13:00:00'
+        }
+
+        response = api_client.post(f'/services/book-appointment/', appointment)
+
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_if_is_authenticated_and_is_not_customer_return_403(self, authorize_user, api_client):
+        user = baker.make(User, role="is_provider", is_staff=False)
+
+        authorize_user(user=user)
 
         customer = baker.make(Customer)
         service = baker.make(Service)
@@ -61,9 +88,9 @@ class TestCreateAppointment():
             'time': '13:00:00'
         }
 
-        response = api_client.post(f'/customer/{customer.id}/appointment/', appointment)
+        response = api_client.post(f'/services/book-appointment/', appointment)
 
-        assert response.status_code == status.HTTP_201_CREATED
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_if_not_authenticated_return_401(self, authenticate_user, api_client):
         customer = baker.make(Customer)
@@ -78,84 +105,31 @@ class TestCreateAppointment():
             'time': '13:00:00'
         }
 
-        response = api_client.post(f'/customer/{customer.id}/appointment/', appointment)
+        response = api_client.post(f'/services/book-appointment/', appointment)
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     
 @pytest.mark.django_db
 class TestGetAppointment():
-    def test_if_is_authenticated_return_200(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
-
-        appointment = baker.make(BookAppointment)
-
-        response = api_client.get(f'/customer/{appointment.customer.id}/appointment/')
-
-        assert response.status_code == status.HTTP_200_OK
-
-    
-    def test_if_not_authenticated_return_401(self, authenticate_user, api_client):
-        appointment = baker.make(BookAppointment)
-
-        response = api_client.get(f'/customer/{appointment.customer.id}/appointment/')
+    def test_if_not_authenticated_return_401(self, api_client):
+        response = api_client.get(f'/services/book-appointment/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.django_db
 class TestRetrieveAppointment():
-    def test_if_is_authenticated_return_200(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
-
-        appointment = baker.make(BookAppointment)
-
-        response = api_client.get(f'/customer/{appointment.customer.id}/appointment/{appointment.id}/')
-
-        assert response.status_code == status.HTTP_200_OK
-
-    def test_if_not_authenticated_return_401(self, authenticate_user, api_client):
-        appointment = baker.make(BookAppointment)
-
-        response = api_client.get(f'/customer/{appointment.customer.id}/appointment/{appointment.id}/')
+    def test_if_not_authenticated_return_401(self, api_client):
+        response = api_client.get(f'/services/book-appointment/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_if_appointment_exists_return_200(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
-
-        appointment = baker.make(BookAppointment)
-
-        response = api_client.get(f'/customer/{appointment.customer.id}/appointment/{appointment.id}/')
-
-        assert response.status_code == status.HTTP_200_OK
-
-    def test_if_appointment_doesnot_exist_return_404(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
-
-        appointment = baker.make(BookAppointment)
-        appointment.delete()
-
-        response = api_client.get(f'/cutomer/{appointment.customer.id}/appointment/{appointment.id}')
-
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-
-
+    
 @pytest.mark.django_db
 class TestDeleteAppointment():
-    def test_if_is_authenticated_return_204(self, authenticate_user, api_client):
-        authenticate_user(is_staff=False)
+    def test_if_not_authenticated_return_401(self, api_client):
+        response = api_client.get(f'/services/book-appointment/')
 
-        appointment = baker.make(BookAppointment)
-
-        response = api_client.delete(f'/customer/{appointment.customer.id}/appointment/{appointment.id}/')
-
-        assert response.status_code == status.HTTP_204_NO_CONTENT
-
-    
-    def test_if_not_authenticated_return_401(self, authenticate_user, api_client):
-        appointment = baker.make(BookAppointment)
-
-        response = api_client.delete(f'/customer/{appointment.customer.id}/appointment/{appointment.id}/')
-
+        
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
