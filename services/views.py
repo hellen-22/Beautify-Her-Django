@@ -4,7 +4,7 @@ from rest_framework import viewsets, generics, permissions
 
 from .serializers import *
 from .models import *
-
+from .permissions import *
 
 class ServiceCategoryViewSet(viewsets.ModelViewSet):
     queryset = ServiceCategory.objects.all()
@@ -29,12 +29,16 @@ class ProductCategoryViewSet(viewsets.ModelViewSet):
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ViewProductSerializer
         return ProductSerializer
+    
+    def get_permissions(self):
+        if self.request.method in ['POST', 'PATCH', 'DELETE', 'PUT']:
+            return [IsServiceProviderOrAdmin()]
+        return [permissions.IsAuthenticated()]
     
 
 class CartViewSet(viewsets.ModelViewSet):

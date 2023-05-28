@@ -13,3 +13,9 @@ def authenticate_user(api_client):
     def do_authenticate(is_staff=True):
         return api_client.force_authenticate(user=User(is_staff=is_staff))
     return do_authenticate
+
+@pytest.fixture
+def authorize_user(api_client):
+    def do_authenticate(user):
+        return api_client.force_authenticate(user=user)
+    return do_authenticate
