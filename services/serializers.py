@@ -84,8 +84,8 @@ class CartSerializer(serializers.ModelSerializer):
 """A serializer to enable uploading of services by service providers"""
 class ServiceUploadSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        provider_id = self.context['provider_id']
-        provider = ServiceProvider.objects.get(id=provider_id)
+        user = self.context['user']
+        provider = ServiceProvider.objects.get(user=user)
 
         service_upload = ServiceUpload.objects.create(provider=provider, **validated_data)
         return service_upload

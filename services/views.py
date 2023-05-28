@@ -62,14 +62,15 @@ class CartItemViewSet(viewsets.ModelViewSet):
 """The view for service uploading"""
 class ServiceUploadViewSet(viewsets.ModelViewSet):
     serializer_class = ServiceUploadSerializer
-    #permission_classes = [IsAuthenticated]
+    queryset = ServiceUpload.objects.all()
 
     def get_serializer_context(self):
-        return {'provider_id': self.kwargs['provider_pk']}
+        return {'user': self.request.user }
 
-    def get_queryset(self):
-        return ServiceUpload.objects.filter(provider_id=self.kwargs['provider_pk'])
-
+    def get_permissions(self):
+        if self.request.method in ['POST']:
+            return [IsServiceProviderOrAdmin()]
+        return [IsOwnerOrReadOnly(), permissions.IsAuthenticated()]
 
 """The view to enable customer booking appointment"""
 class AppointmentBookingViewSet(viewsets.ModelViewSet):
