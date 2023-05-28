@@ -5,7 +5,15 @@ from .models import *
 # Register your models here.
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    pass
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal info', {'fields': ('username', 'first_name', 'last_name', 'bio')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'role')}),
+    )
+    add_fieldsets = (
+        (None, {'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}),
+    )
+
 
 @admin.register(Customer)
 class CustomerProfile(admin.ModelAdmin):

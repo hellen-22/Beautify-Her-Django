@@ -98,8 +98,8 @@ class ServiceUploadSerializer(serializers.ModelSerializer):
 """A Serializer to enable booking of appointment by customers"""
 class AppointmentBookingSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        customer_id = self.context['customer_id']
-        customer = Customer.objects.get(id=customer_id)
+        user = self.context['user']
+        customer = Customer.objects.get(user=user)
 
         book_appointment = BookAppointment.objects.create(customer=customer, **validated_data)
         return book_appointment

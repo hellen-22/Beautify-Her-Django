@@ -11,7 +11,5 @@ router.register('user', views.UserViewSet, basename='user')
 router.register('customer', views.CustomerViewSet, basename='customer')
 router.register('service-provider', views.ServiceProviderViewSet, basename='provider')
 
-customer_router = routers.NestedDefaultRouter(router, 'customer', lookup='customer')
-customer_router.register('appointment', AppointmentBookingViewSet, basename='appointment')
 
-urlpatterns = router.urls + customer_router.urls
+urlpatterns = router.urls

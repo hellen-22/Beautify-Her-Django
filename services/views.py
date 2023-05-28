@@ -70,16 +70,28 @@ class ServiceUploadViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.request.method in ['POST']:
             return [IsServiceProviderOrAdmin()]
-        return [IsOwnerOrReadOnly(), permissions.IsAuthenticated()]
+        return [IsServiceOwnerOrReadOnly(), permissions.IsAuthenticated()]
 
 """The view to enable customer booking appointment"""
 class AppointmentBookingViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentBookingSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_context(self):
-        return {'customer_id': self.kwargs['customer_pk']}
-
+        return {'user': self.request.user}
+    
+    def get_permissions(self):
+        if self.request.method in ['POST']:
+            return [IsCustomerOrAdmin()]
+        return [IsAppointmentOwnerOrReadOnly(), permissions.IsAuthenticated()]
+    
     def get_queryset(self):
-        return BookAppointment.objects.filter(customer_id=self.kwargs['customer_pk']).select_related('customer')
+        if self.request.user.is_staff:
+            return BookAppointment.objects.all()
 
+        elif self.request.user.role == 'is_customer':
+            customer = Customer.objects.get(user=self.request.user)
+            return BookAppointment.objects.filter(customer=customer).select_related('customer')
+        
+        elif self.request.user.role == 'is_provider':
+            provider = ServiceProvider.objects.get(user=self.request.user)
+            return BookAppointment.objects.filter(provider=provider).select_related('provider')
