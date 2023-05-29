@@ -20,7 +20,7 @@ class User(AbstractUser):
         return self.username
 
 class Customer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer')
 
     def __str__(self):
         return self.user.first_name
@@ -34,7 +34,7 @@ class Customer(models.Model):
         return self.user.bio
 
 class ServiceProvider(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_provider')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='provider')
     location = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=100)
 

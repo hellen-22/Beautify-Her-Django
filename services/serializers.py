@@ -94,9 +94,15 @@ class ServiceUploadSerializer(serializers.ModelSerializer):
         model = ServiceUpload
         fields = ['id', 'service', 'price', 'images', 'rating']
 
+class CustomerDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['id']
 
 """A Serializer to enable booking of appointment by customers"""
 class AppointmentBookingSerializer(serializers.ModelSerializer):
+    customer = CustomerDetailSerializer(read_only=True)
+    
     def create(self, validated_data):
         user = self.context['user']
         customer = Customer.objects.get(user=user)
@@ -107,6 +113,6 @@ class AppointmentBookingSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = BookAppointment
-        fields = ['id', 'service', 'provider', 'date', 'time']
+        fields = ['id', 'service', 'provider', 'customer', 'date', 'time']
 
  

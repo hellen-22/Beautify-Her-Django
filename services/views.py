@@ -4,6 +4,7 @@ from rest_framework import viewsets, generics, permissions
 
 from .serializers import *
 from .models import *
+from accounts.models import User
 from .permissions import *
 
 class ServiceCategoryViewSet(viewsets.ModelViewSet):
@@ -13,7 +14,7 @@ class ServiceCategoryViewSet(viewsets.ModelViewSet):
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
-    queryset = Service.objects.all()
+    queryset = Service.objects.all().select_related('category')
     permission_classes = [permissions.IsAdminUser]
 
     def get_serializer_class(self):
@@ -28,7 +29,7 @@ class ProductCategoryViewSet(viewsets.ModelViewSet):
     
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().select_related('category')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -47,7 +48,7 @@ class CartViewSet(viewsets.ModelViewSet):
 
 
 class CartItemViewSet(viewsets.ModelViewSet):
-    queryset = CartItem.objects.all()
+    queryset = CartItem.objects.all().select_related('product')
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -86,12 +87,11 @@ class AppointmentBookingViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if self.request.user.is_staff:
-            return BookAppointment.objects.all()
+            User.objects.select_related()
+            return BookAppointment.objects.all().select_related('customer')
 
         elif self.request.user.role == 'is_customer':
-            customer = Customer.objects.get(user=self.request.user)
-            return BookAppointment.objects.filter(customer=customer).select_related('customer')
+            return BookAppointment.objects.filter(customer__user=self.request.user).select_related('customer')
         
         elif self.request.user.role == 'is_provider':
-            provider = ServiceProvider.objects.get(user=self.request.user)
-            return BookAppointment.objects.filter(provider=provider).select_related('provider')
+            return BookAppointment.objects.filter(provider__user=self.request.user).select_related('customer')
