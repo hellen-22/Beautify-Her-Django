@@ -21,7 +21,7 @@ class TestCreateProduct():
             "slug": "-"
         }
 
-        response = api_client.post('/services/product/', product, format='json')
+        response = api_client.post('/product/', product, format='json')
 
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -45,7 +45,7 @@ class TestCreateProduct():
             "price": Decimal('3.99'),
         }
 
-        response = api_client.post('/services/product/', product, format='json')
+        response = api_client.post('/product/', product, format='json')
         
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -63,7 +63,7 @@ class TestCreateProduct():
             "slug": "-"
         }
 
-        response = api_client.post('/services/product/', product, format='json')
+        response = api_client.post('/product/', product, format='json')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -77,7 +77,7 @@ class TestCreateProduct():
             "slug": "-"
         }
 
-        response = api_client.post('/services/product/', product, format='json')
+        response = api_client.post('/product/', product, format='json')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -95,7 +95,7 @@ class TestCreateProduct():
             "slug": "-"
         }
 
-        response = api_client.post('/services/product/', product, format='json')
+        response = api_client.post('/product/', product, format='json')
 
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -113,7 +113,7 @@ class TestCreateProduct():
             "slug": "-"
         }
 
-        response = api_client.post('/services/product/', product, format='json')
+        response = api_client.post('/product/', product, format='json')
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -123,12 +123,12 @@ class TestGetProduct():
     def test_if_is_authenticated_return_200(self, authenticate_user, api_client):
         authenticate_user(is_staff=False)
 
-        response = api_client.get('/services/product/')
+        response = api_client.get('/product/')
 
         assert response.status_code == status.HTTP_200_OK
 
     def test_if_not_authenticated_return_401(self, api_client):
-        response = api_client.get('/services/product/')
+        response = api_client.get('/product/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -140,14 +140,14 @@ class TestRetrieveProduct():
 
         product = baker.make(Product)
 
-        response = api_client.get(f'/services/product/{product.id}/')
+        response = api_client.get(f'/product/{product.id}/')
 
         assert response.status_code == status.HTTP_200_OK
 
     def test_if_not_authenticated_return_401(self, api_client):
         product = baker.make(Product)
 
-        response = api_client.get(f'/services/product/{product.id}/')
+        response = api_client.get(f'/product/{product.id}/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -156,7 +156,7 @@ class TestRetrieveProduct():
 
         product = baker.make(Product)
 
-        response = api_client.get(f'/services/product/{product.id}/')
+        response = api_client.get(f'/product/{product.id}/')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -166,7 +166,7 @@ class TestRetrieveProduct():
         product = baker.make(Product)
         product.delete()
 
-        response = api_client.get(f'/services/product/{product.id}/')
+        response = api_client.get(f'/product/{product.id}/')
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -182,7 +182,7 @@ class TestUpdateProduct():
             "price": Decimal('8.09'),
         }
 
-        response = api_client.patch(f'/services/product/{product.id}/', update_data, format='json')
+        response = api_client.patch(f'/product/{product.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -199,7 +199,7 @@ class TestUpdateProduct():
             "price": Decimal('8.09'),
         }
 
-        response = api_client.patch(f'/services/product/{product.id}/', update_data, format='json')
+        response = api_client.patch(f'/product/{product.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -215,7 +215,7 @@ class TestUpdateProduct():
             "price": Decimal('8.09'),
         }
 
-        response = api_client.patch(f'/services/product/{product.id}/', update_data, format='json')
+        response = api_client.patch(f'/product/{product.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -231,7 +231,7 @@ class TestUpdateProduct():
             "price": Decimal('8.09'),
         }
 
-        response = api_client.patch(f'/services/product/{product.id}/', update_data, format='json')
+        response = api_client.patch(f'/product/{product.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -247,7 +247,7 @@ class TestUpdateProduct():
             "price": Decimal('8.09'),
         }
 
-        response = api_client.patch(f'/services/product/{product.id}/', update_data, format='json')
+        response = api_client.patch(f'/product/{product.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -258,7 +258,7 @@ class TestDeleteProduct():
 
         product = baker.make(Product)
 
-        response = api_client.delete(f'/services/product/{product.id}/')
+        response = api_client.delete(f'/product/{product.id}/')
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
@@ -269,7 +269,7 @@ class TestDeleteProduct():
 
         product = baker.make(Product)
 
-        response = api_client.delete(f'/services/product/{product.id}/')
+        response = api_client.delete(f'/product/{product.id}/')
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
@@ -280,7 +280,7 @@ class TestDeleteProduct():
 
         product = baker.make(Product)
 
-        response = api_client.delete(f'/services/product/{product.id}/')
+        response = api_client.delete(f'/product/{product.id}/')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 

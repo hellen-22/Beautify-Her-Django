@@ -18,8 +18,8 @@ class TestCreateCategory():
             "name": "Hair food"
         }
 
-        response = api_client.post('/services/service-category/', service_category, format='json')
-        response2 = api_client.post('/services/product-category/', product_category, format='json')
+        response = api_client.post('/service-category/', service_category, format='json')
+        response2 = api_client.post('/product-category/', product_category, format='json')
 
         assert ((response.status_code == status.HTTP_201_CREATED) and (response2.status_code == status.HTTP_201_CREATED))
 
@@ -35,8 +35,8 @@ class TestCreateCategory():
             "name": "Hair food"
         }
 
-        response = api_client.post('/services/service-category/', service_category, format='json')
-        response2 = api_client.post('/services/product-category/', product_category, format='json')
+        response = api_client.post('/service-category/', service_category, format='json')
+        response2 = api_client.post('/product-category/', product_category, format='json')
 
         assert ((response.status_code == status.HTTP_403_FORBIDDEN) and (response2.status_code == status.HTTP_403_FORBIDDEN))
 
@@ -51,8 +51,8 @@ class TestCreateCategory():
             "name": "Hair food"
         }
 
-        response = api_client.post('/services/service-category/', service_category, format='json')
-        response2 = api_client.post('/services/product-category/', product_category, format='json')
+        response = api_client.post('/service-category/', service_category, format='json')
+        response2 = api_client.post('/product-category/', product_category, format='json')
 
         assert ((response.status_code == status.HTTP_201_CREATED) and (response2.status_code == status.HTTP_201_CREATED))
 
@@ -68,8 +68,8 @@ class TestCreateCategory():
             "name": "Hair food"
         }
 
-        response = api_client.post('/services/service-category/', product_category, format='json')
-        response2 = api_client.post('/services/product-category/', service_category, format='json')
+        response = api_client.post('/service-category/', product_category, format='json')
+        response2 = api_client.post('/product-category/', service_category, format='json')
 
         assert ((response.status_code == status.HTTP_400_BAD_REQUEST) and (response2.status_code == status.HTTP_400_BAD_REQUEST))
 
@@ -78,16 +78,16 @@ class TestGetCategories():
     def test_if_is_admin_return_200(self, authenticate_user, api_client):
         authenticate_user()
 
-        response = api_client.get('/services/service-category/')
-        response2 = api_client.get('/services/product-category/')
+        response = api_client.get('/service-category/')
+        response2 = api_client.get('/product-category/')
 
         assert ((response.status_code == status.HTTP_200_OK) and (response2.status_code == status.HTTP_200_OK))
 
     def test_if_is_not_admin_return_403(self, authenticate_user, api_client):
         authenticate_user(is_staff=False)
 
-        response = api_client.get('/services/service-category/')
-        response2 = api_client.get('/services/product-category/')
+        response = api_client.get('/service-category/')
+        response2 = api_client.get('/product-category/')
 
         assert ((response.status_code == status.HTTP_403_FORBIDDEN) and (response2.status_code == status.HTTP_403_FORBIDDEN))
 
@@ -99,8 +99,8 @@ class TestRetrieveCategories():
         service_category = baker.make(ServiceCategory)
         product_category = baker.make(ProductCategory)
 
-        response = api_client.get(f'/services/service-category/{service_category.id}/')
-        response2 = api_client.get(f'/services/product-category/{product_category.id}/')
+        response = api_client.get(f'/service-category/{service_category.id}/')
+        response2 = api_client.get(f'/product-category/{product_category.id}/')
 
         assert ((response.status_code == status.HTTP_200_OK) and (response2.status_code == status.HTTP_200_OK))
 
@@ -110,8 +110,8 @@ class TestRetrieveCategories():
         service_category = baker.make(ServiceCategory)
         product_category = baker.make(ProductCategory)
 
-        response = api_client.get(f'/services/service-category/{service_category.id}/')
-        response2 = api_client.get(f'/services/product-category/{product_category.id}/')
+        response = api_client.get(f'/service-category/{service_category.id}/')
+        response2 = api_client.get(f'/product-category/{product_category.id}/')
 
         assert ((response.status_code == status.HTTP_403_FORBIDDEN) and (response2.status_code == status.HTTP_403_FORBIDDEN))
 
@@ -122,8 +122,8 @@ class TestRetrieveCategories():
         service_category = baker.make(ServiceCategory)
         product_category = baker.make(ProductCategory)
 
-        response = api_client.get(f'/services/service-category/{service_category.id}/')
-        response2 = api_client.get(f'/services/product-category/{product_category.id}/')
+        response = api_client.get(f'/service-category/{service_category.id}/')
+        response2 = api_client.get(f'/product-category/{product_category.id}/')
 
         assert ((response.status_code == status.HTTP_200_OK) and (response2.status_code == status.HTTP_200_OK))
 
@@ -137,8 +137,8 @@ class TestRetrieveCategories():
         service_category.delete()
         product_category.delete()
 
-        response = api_client.get(f'/services/service-category/{service_category.id}/')
-        response2 = api_client.get(f'/services/product-category/{product_category.id}/')
+        response = api_client.get(f'/service-category/{service_category.id}/')
+        response2 = api_client.get(f'/product-category/{product_category.id}/')
 
         assert ((response.status_code == status.HTTP_404_NOT_FOUND) and (response2.status_code == status.HTTP_404_NOT_FOUND))
 
@@ -157,8 +157,8 @@ class TestUpdateCategory():
             "name": "Hair food"
         }
 
-        response = api_client.put(f'/services/service-category/{service_category.id}/', service_update_data, format='json')
-        response2 = api_client.put(f'/services/product-category/{product_category.id}/', product_update_data, format='json')
+        response = api_client.put(f'/service-category/{service_category.id}/', service_update_data, format='json')
+        response2 = api_client.put(f'/product-category/{product_category.id}/', product_update_data, format='json')
 
         assert ((response.status_code == status.HTTP_200_OK) and (response2.status_code == status.HTTP_200_OK))
 
@@ -176,8 +176,8 @@ class TestUpdateCategory():
             "name": "Hair food"
         }
 
-        response = api_client.put(f'/services/service-category/{service_category.id}/', service_update_data, format='json')
-        response2 = api_client.put(f'/services/product-category/{product_category.id}/', product_update_data, format='json')
+        response = api_client.put(f'/service-category/{service_category.id}/', service_update_data, format='json')
+        response2 = api_client.put(f'/product-category/{product_category.id}/', product_update_data, format='json')
 
         assert ((response.status_code == status.HTTP_403_FORBIDDEN) and (response2.status_code == status.HTTP_403_FORBIDDEN))
 
@@ -194,8 +194,8 @@ class TestUpdateCategory():
             "name": "Hair food"
         }
 
-        response = api_client.put(f'/services/service-category/{service_category.id}/', service_update_data, format='json')
-        response2 = api_client.put(f'/services/product-category/{product_category.id}/', product_update_data, format='json')
+        response = api_client.put(f'/service-category/{service_category.id}/', service_update_data, format='json')
+        response2 = api_client.put(f'/product-category/{product_category.id}/', product_update_data, format='json')
 
 
         assert ((response.status_code == status.HTTP_200_OK) and (response2.status_code == status.HTTP_200_OK))
@@ -214,8 +214,8 @@ class TestUpdateCategory():
             "name": "Hair food"
         }
 
-        response = api_client.put(f'/services/service-category/{service_category.id}/', product_update_data, format='json')
-        response2 = api_client.put(f'/services/product-category/{product_category.id}/', service_update_data, format='json')
+        response = api_client.put(f'/service-category/{service_category.id}/', product_update_data, format='json')
+        response2 = api_client.put(f'/product-category/{product_category.id}/', service_update_data, format='json')
 
         assert ((response.status_code == status.HTTP_400_BAD_REQUEST) and (response2.status_code == status.HTTP_400_BAD_REQUEST))
 
@@ -227,8 +227,8 @@ class TestDeleteCategory():
         service_category = baker.make(ServiceCategory)
         product_category = baker.make(ProductCategory)
 
-        response = api_client.delete(f'/services/service-category/{service_category.id}/')
-        response2 = api_client.delete(f'/services/product-category/{product_category.id}/')
+        response = api_client.delete(f'/service-category/{service_category.id}/')
+        response2 = api_client.delete(f'/product-category/{product_category.id}/')
 
         assert ((response.status_code == status.HTTP_204_NO_CONTENT) and (response2.status_code == status.HTTP_204_NO_CONTENT))
 
@@ -239,8 +239,8 @@ class TestDeleteCategory():
         service_category = baker.make(ServiceCategory)
         product_category = baker.make(ProductCategory)
 
-        response = api_client.delete(f'/services/service-category/{service_category.id}/')
-        response2 = api_client.delete(f'/services/product-category/{product_category.id}/')
+        response = api_client.delete(f'/service-category/{service_category.id}/')
+        response2 = api_client.delete(f'/product-category/{product_category.id}/')
 
         assert ((response.status_code == status.HTTP_403_FORBIDDEN) and (response2.status_code == status.HTTP_403_FORBIDDEN))
 

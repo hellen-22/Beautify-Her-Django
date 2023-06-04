@@ -17,13 +17,13 @@ class TestGetServiceUpload():
     def test_if_is_authenticated_return_200(self, authenticate_user, api_client):
         authenticate_user(is_staff=False)
 
-        response = api_client.get('/services/service-upload/')
+        response = api_client.get('/service-upload/')
 
         assert response.status_code == status.HTTP_200_OK
 
     
     def test_if_is_not_authenticated_return_401(self, api_client):
-        response = api_client.get('/services/service-upload/')
+        response = api_client.get('/service-upload/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -34,7 +34,7 @@ class TestRetrieveServiceUpload():
 
         service_upload = baker.make(ServiceUpload)
 
-        response = api_client.get(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.get(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -42,7 +42,7 @@ class TestRetrieveServiceUpload():
     def test_if_is_not_authenticated_return_401(self, authenticate_user, api_client):
         service_upload = baker.make(ServiceUpload)
 
-        response = api_client.get(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.get(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -52,7 +52,7 @@ class TestRetrieveServiceUpload():
 
         service_upload = baker.make(ServiceUpload)
 
-        response = api_client.get(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.get(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -62,7 +62,7 @@ class TestRetrieveServiceUpload():
         service_upload = baker.make(ServiceUpload)
         service_upload.delete()
 
-        response = api_client.get(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.get(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -77,7 +77,7 @@ class TestUpdateServiceUpload():
             "price": Decimal('2.20')
         }
 
-        response = api_client.patch(f'/services/service-upload/{service_upload.id}/', update_data, format='json')
+        response = api_client.patch(f'/service-upload/{service_upload.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_200_OK
     
@@ -90,7 +90,7 @@ class TestUpdateServiceUpload():
             "price": Decimal('2.20')
         }
 
-        response = api_client.patch(f'/services/service-upload/{service_upload.id}/', update_data, format='json')
+        response = api_client.patch(f'/service-upload/{service_upload.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
     
@@ -105,7 +105,7 @@ class TestUpdateServiceUpload():
             "price": Decimal('2.20')
         }
 
-        response = api_client.patch(f'/services/service-upload/{service_upload.id}/', update_data, format='json')
+        response = api_client.patch(f'/service-upload/{service_upload.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -122,7 +122,7 @@ class TestUpdateServiceUpload():
             "price": Decimal('2.20')
         }
 
-        response = api_client.patch(f'/services/service-upload/{service_upload.id}/', update_data, format='json')
+        response = api_client.patch(f'/service-upload/{service_upload.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -136,7 +136,7 @@ class TestUpdateServiceUpload():
             "price": Decimal('2.20')
         }
 
-        response = api_client.patch(f'/services/service-upload/{service_upload.id}/', update_data, format='json')
+        response = api_client.patch(f'/service-upload/{service_upload.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -151,7 +151,7 @@ class TestUpdateServiceUpload():
             "price": Decimal('2.20')
         }
 
-        response = api_client.patch(f'/services/service-upload/{service_upload.id}/', update_data, format='json')
+        response = api_client.patch(f'/service-upload/{service_upload.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_200_OK
 
@@ -166,7 +166,7 @@ class TestUpdateServiceUpload():
             "price": ''
         }
 
-        response = api_client.patch(f'/services/service-upload/{service_upload.id}/', update_data, format='json')
+        response = api_client.patch(f'/service-upload/{service_upload.id}/', update_data, format='json')
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -178,7 +178,7 @@ class TestDeleteServiceUpload():
 
         service_upload = baker.make(ServiceUpload)
 
-        response = api_client.delete(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.delete(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
@@ -187,7 +187,7 @@ class TestDeleteServiceUpload():
 
         service_upload = baker.make(ServiceUpload)
 
-        response = api_client.delete(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.delete(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
     
@@ -199,7 +199,7 @@ class TestDeleteServiceUpload():
         service_upload = baker.make(ServiceUpload, provider=provider)
 
 
-        response = api_client.delete(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.delete(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
@@ -212,7 +212,7 @@ class TestDeleteServiceUpload():
 
         service_upload = baker.make(ServiceUpload, provider=provider)
 
-        response = api_client.delete(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.delete(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -222,6 +222,6 @@ class TestDeleteServiceUpload():
         authorize_user(user=user)
         service_upload = baker.make(ServiceUpload)
 
-        response = api_client.patch(f'/services/service-upload/{service_upload.id}/')
+        response = api_client.patch(f'/service-upload/{service_upload.id}/')
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
