@@ -26,7 +26,7 @@ class Service(models.Model):
 
 
 class ServiceUpload(models.Model):
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='upload')
     provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE, related_name='provider')
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(1)])
     images = models.ImageField(upload_to='images/services')
@@ -45,7 +45,7 @@ class ProductCategory(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='product')
     image = models.ImageField(null=True, blank=True, upload_to='products/images')
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(1)])
     slug = models.SlugField(null=True, blank=True)
@@ -67,15 +67,15 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     placed_at = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=100, choices=PAYMENT_STATUS_CHOICES)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    payment_status = models.CharField(max_length=100, choices=PAYMENT_STATUS_CHOICES, default='Pending')
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='order')
 
     def __str__(self):
         return self.customer.first_name
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_item')
     quantity = models.PositiveIntegerField()
     added_at = models.DateTimeField(auto_now_add=True)
 

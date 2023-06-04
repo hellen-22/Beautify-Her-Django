@@ -43,7 +43,7 @@ urlpatterns = [
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
     path('', include('accounts.urls')),
-    path('services/', include('services.urls')),
+    path('', include('services.urls')),
     # path('auth/', include("djoser.urls")),
 
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
