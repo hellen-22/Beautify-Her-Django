@@ -93,6 +93,8 @@ class CartItemViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return AddCartItemSerializer
+        elif self.request.method in ['PUT', 'PATCH']:
+            return UpdateCartItemSerializer
         return CartItemSerializer
 
 
@@ -114,3 +116,9 @@ class OrderViewSet(viewsets.ModelViewSet):
         elif self.request.method in ['PUT', 'PATCH']:
             return UpdateOrderSerializer
         return OrderSerializer
+    
+    
+class OrderItemViewSet(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemsSerializer
+    http_method_names = ['get']

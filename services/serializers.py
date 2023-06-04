@@ -74,6 +74,11 @@ class AddCartItemSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = ['id', 'product', 'quantity']
 
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['quantity']
+
 
 class CartSerializer(serializers.ModelSerializer):
     cart_items = CartItemSerializer(many=True, read_only=True)
@@ -119,7 +124,7 @@ class AppointmentBookingSerializer(serializers.ModelSerializer):
 
 
 """Order Item Details"""
-class OrderItemsDetailsSerializer(serializers.ModelSerializer):
+class OrderItemsSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
     total_price_of_item = serializers.SerializerMethodField()
 
@@ -132,7 +137,7 @@ class OrderItemsDetailsSerializer(serializers.ModelSerializer):
         
 """Order Serializer"""
 class OrderSerializer(serializers.ModelSerializer):
-    order_items = OrderItemsDetailsSerializer(many=True)
+    order_items = OrderItemsSerializer(many=True)
     total_price = serializers.SerializerMethodField()
 
     def get_total_price(self, orderitems:OrderItem):
