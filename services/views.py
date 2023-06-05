@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Sum
-from rest_framework import viewsets, generics, permissions
+from rest_framework import viewsets, generics, permissions, response
 
 from .serializers import *
 from .models import *
@@ -107,6 +107,15 @@ class CartItemViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
 
+    def create(self, request, *args, **kwargs):
+        serializer = CreateOrderSerializer(
+            data=request.data,
+            context={'user': self.request.user})
+        serializer.is_valid(raise_exception=True)
+        order = serializer.save()
+        serializer = OrderSerializer(order)
+        return response.Response(serializer.data)
+
     def get_serializer_context(self):
         return {'user': self.request.user}
     
@@ -116,6 +125,19 @@ class OrderViewSet(viewsets.ModelViewSet):
         elif self.request.method in ['PUT', 'PATCH']:
             return UpdateOrderSerializer
         return OrderSerializer
+    
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'PUT', 'DELETE']:
+            return [permissions.IsAdminUser()]
+        return [IsCustomerAndIsAuthenticated()]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return Order.objects.all()
+        else:
+            customer = Customer.objects.get(user=user)
+            return Order.objects.filter(customer=customer)
     
     
 class OrderItemViewSet(viewsets.ModelViewSet):

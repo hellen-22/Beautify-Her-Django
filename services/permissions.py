@@ -9,6 +9,10 @@ class IsCustomerOrAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
         return ((request.user.is_authenticated) and (request.user.role == 'is_customer')) or (request.user.is_staff)
     
+class IsCustomerAndIsAuthenticated(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return ((request.user.is_authenticated) and (request.user.role == 'is_customer'))
+    
 
 class IsServiceOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
