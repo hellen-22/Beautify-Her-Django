@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Sum
+from django.db.models import Sum, Prefetch
 from rest_framework import viewsets, generics, permissions, response
 
 from .serializers import *
@@ -51,7 +51,6 @@ class AppointmentBookingViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         if self.request.user.is_staff:
-            User.objects.select_related()
             return BookAppointment.objects.all().select_related('customer')
 
         elif self.request.user.role == 'is_customer':
@@ -69,7 +68,7 @@ class ProductCategoryViewSet(viewsets.ModelViewSet):
     
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all().select_related('category')
+    queryset = Product.objects.select_related('category')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -83,7 +82,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     
 
 class CartViewSet(viewsets.ModelViewSet):
-    queryset = Cart.objects.all()
+    queryset = Cart.objects.prefetch_related('cart_items__product')
     serializer_class = CartSerializer
 
 
@@ -105,8 +104,6 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
 """Orders view"""
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
-
     def create(self, request, *args, **kwargs):
         serializer = CreateOrderSerializer(
             data=request.data,
@@ -129,18 +126,17 @@ class OrderViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.request.method in ['PATCH', 'PUT', 'DELETE']:
             return [permissions.IsAdminUser()]
-        return [IsCustomerAndIsAuthenticated()]
+        return [IsCustomerAndIsAuthenticated(), IsOrderOwnerOrReadOnly()]
     
     def get_queryset(self):
         user = self.request.user
         if user.is_staff:
             return Order.objects.all()
         else:
-            customer = Customer.objects.get(user=user)
-            return Order.objects.filter(customer=customer)
+            return Order.objects.filter(customer__user=user).select_related('customer').prefetch_related('order_items', 'order_items__product')
     
     
 class OrderItemViewSet(viewsets.ModelViewSet):
-    queryset = OrderItem.objects.all()
+    queryset = OrderItem.objects.select_related('product')
     serializer_class = OrderItemsSerializer
     http_method_names = ['get']

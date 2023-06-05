@@ -25,7 +25,7 @@ class TestCreateAppointment():
             'time': '13:00:00'
         }
 
-        response = api_client.post(f'/book-appointment/', appointment)
+        response = api_client.post(f'/appointment/', appointment)
 
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -46,7 +46,7 @@ class TestCreateAppointment():
             'time': ''
         }
 
-        response = api_client.post(f'/book-appointment/', appointment)
+        response = api_client.post(f'/appointment/', appointment)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -67,7 +67,7 @@ class TestCreateAppointment():
             'time': '13:00:00'
         }
 
-        response = api_client.post(f'/book-appointment/', appointment)
+        response = api_client.post(f'/appointment/', appointment)
 
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -88,7 +88,7 @@ class TestCreateAppointment():
             'time': '13:00:00'
         }
 
-        response = api_client.post(f'/book-appointment/', appointment)
+        response = api_client.post(f'/appointment/', appointment)
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -105,7 +105,7 @@ class TestCreateAppointment():
             'time': '13:00:00'
         }
 
-        response = api_client.post(f'/book-appointment/', appointment)
+        response = api_client.post(f'/appointment/', appointment)
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -113,7 +113,7 @@ class TestCreateAppointment():
 @pytest.mark.django_db
 class TestGetAppointment():
     def test_if_not_authenticated_return_401(self, api_client):
-        response = api_client.get(f'/book-appointment/')
+        response = api_client.get(f'/appointment/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -121,7 +121,7 @@ class TestGetAppointment():
 @pytest.mark.django_db
 class TestRetrieveAppointment():
     def test_if_not_authenticated_return_401(self, api_client):
-        response = api_client.get(f'/book-appointment/')
+        response = api_client.get(f'/appointment/')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -129,7 +129,7 @@ class TestRetrieveAppointment():
 @pytest.mark.django_db
 class TestDeleteAppointment():
     def test_if_not_authenticated_return_401(self, api_client):
-        response = api_client.get(f'/book-appointment/')
+        response = api_client.get(f'/appointment/')
 
         
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
