@@ -11,9 +11,6 @@ A salon booking appointment django based project that allows users showcase thei
 # Usage
 To run the project:
 1. Clone the repository
-   ```bash
-      $ git clone https://github.com/yourusername/mastori.git
-   ```
 2. Create a virtual environment. If you already have an existing virtual environment you can skip the creation step. Navigate to where the virtual environment is and activate the environment.
    ```bash
       $ python -m venv name_of_environment
